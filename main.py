@@ -5,8 +5,6 @@ def main():
     ## where the data is held
     data_set = []
 
-    max_x = 1626
-
     with open('ball_positions.csv', newline='') as csvfile:
         csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         for row in csvreader:
