@@ -5,6 +5,8 @@ def main():
     ## where the data is held
     data_set = []
 
+    max_x = 1626
+
     with open('ball_positions.csv', newline='') as csvfile:
         csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         for row in csvreader:
@@ -13,18 +15,20 @@ def main():
 
     delta_x = 100
     run_sets = []
+
     for data in range(len(data_set)):
         next_run = True
         if data+3 >= len(data_set):
             break
-        for next in range(4):
-            diff_x_pos = data_set[data][1] - data_set[data+next][1]
-            diff_y_pos = data_set[data][2] - data_set[data+next][2]
+        for next in range(1,4):
+            diff_x_pos = data_set[data+next-1][1] - data_set[data+next][1]
+            diff_y_pos = data_set[data+next-1][2] - data_set[data+next][2]
             if delta_x**2 < (diff_x_pos**2 + diff_y_pos**2):
                 next_run = False
+
         if next_run:
             run_sets.append([data_set[data][1:], data_set[data+1][1:], data_set[data+2][1:], data_set[data+3][1:]])
-            print('row num: ' + str(data) + ' row: ' + str(run_sets[-1]))
+            print('row num: ' + str(len(run_sets)) + ' row: ' + str(run_sets[-1]))
 
 
 
