@@ -3,8 +3,10 @@ import keras
 from keras import layers
 
 class ANN():
-    def __init__(self):
+    def __init__(self,train, test):
         # define the model with keras
+        train_data = train
+        test_data = test
 
         self.model = keras.Sequential(
             [

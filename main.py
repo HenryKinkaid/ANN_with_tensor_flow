@@ -8,7 +8,7 @@ MAX_Y = 988
 def main():
     data = extract_data('ball_positions.csv')
     train, test = simple_train_test_split(data)
-    neural_network = ANN()
+    neural_network = ANN(train, test)
     # print(data)
 
 def extract_data(file):
