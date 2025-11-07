@@ -1,11 +1,14 @@
 import tensorflow as tf
 import csv
 import numpy as np
+from ANN_File import ANN
 MAX_X = 1626
 MAX_Y = 988
 
 def main():
     data = extract_data('ball_positions.csv')
+    train, test = simple_train_test_split(data)
+    neural_network = ANN()
     # print(data)
 
 def extract_data(file):
@@ -47,27 +50,15 @@ def extract_data(file):
 
     return run_sets
 
-def simple_train_test_split(X, y, test_size=0.2, random_seed=42):
+def simple_train_test_split(data, test_size=0.2, random_seed=42):
     """Splits X and y into training and testing sets"""
-    split = int(len(placeholderdata) * 0.8)
-    train_sets = placeholderdata[:split]
-    test_sets = placeholderdata[split:]
+    random.random.seed(random_seed)
+    random.shuffle(data)
+    split = int(len(data) * 1-test_size)
+    train_sets = data[:split]
+    test_sets = data[split:]
 
-    # convert to X and y
-    def make_xy(sets):
-        X, y = [], []
-        for seq in sets:
-            a, b, c, d = seq
-            X.append([
-                a[0], a[1],
-                b[0], b[1],
-                c[0], c[1]
-            ])
-            y.append([d[0], d[1]])
-        return np.array(X, dtype=np.float32), np.array(y, dtype=np.float32)
-
-    X_train, y_train = make_xy(train_sets)
-    X_test, y_test = make_xy(test_sets)
+    return train_sets, test_sets
 
 
 if __name__ == "__main__":
