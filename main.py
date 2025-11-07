@@ -1,5 +1,7 @@
 import tensorflow as tf
 import csv
+MAX_X = 1626
+MAX_Y = 988
 
 def main():
     ## where the data is held
@@ -10,6 +12,12 @@ def main():
         for row in csvreader:
             # creates the data and puts it in the data_set
             data_set.append(list(map(int,row)))
+        # max = 0
+        # for row in data_set:
+        #     if row[2] > max:
+        #         max = row[2]
+        #
+        # print(max)
 
     delta_x = 100
     run_sets = []
@@ -26,7 +34,7 @@ def main():
 
         if next_run:
             run_sets.append([data_set[data][1:], data_set[data+1][1:], data_set[data+2][1:], data_set[data+3][1:]])
-            print('row num: ' + str(len(run_sets)) + ' row: ' + str(run_sets[-1]))
+            # print('row num: ' + str(len(run_sets)) + ' row: ' + str(run_sets[-1]))
 
 
 
