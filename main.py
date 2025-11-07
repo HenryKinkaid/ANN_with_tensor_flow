@@ -55,20 +55,25 @@ def extract_data(file):
 
 def simple_train_test_split(X, y, test_size=0.2, random_seed=42):
     """Splits X and y into training and testing sets"""
-    np.random.seed(random_seed)
-    indices = np.arange(len(X))
-    np.random.shuffle(indices)
+    split = int(len(placeholderdata) * 0.8)
+    train_sets = placeholderdata[:split]
+    test_sets = placeholderdata[split:]
 
-    split_point = int(len(X) * (1 - test_size))
-    train_idx = indices[:split_point]
-    test_idx = indices[split_point:]
+    # convert to X and y
+    def make_xy(sets):
+        X, y = [], []
+        for seq in sets:
+            a, b, c, d = seq
+            X.append([
+                a[0], a[1],
+                b[0], b[1],
+                c[0], c[1]
+            ])
+            y.append([d[0], d[1]])
+        return np.array(X, dtype=np.float32), np.array(y, dtype=np.float32)
 
-    X_train = X[train_idx]
-    y_train = y[train_idx]
-    X_test = X[test_idx]
-    y_test = y[test_idx]
-
-    return X_train, X_test, y_train, y_test
+    X_train, y_train = make_xy(train_sets)
+    X_test, y_test = make_xy(test_sets)
 
 
 if __name__ == "__main__":
