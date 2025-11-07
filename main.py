@@ -1,12 +1,18 @@
 import tensorflow as tf
 import csv
 import numpy as np
+from ANN_File import ANN
 MAX_X = 1626
 MAX_Y = 988
 
 def main():
     data = extract_data('ball_positions.csv')
     # print(data)
+    model = ANN()
+    # test_np_array = np.array([(.5,.5),(.5,.5),(.5,.5)])
+    test_np_array = np.array([.5, .5, .5, .5, .5, .5])
+    print(test_np_array.shape)
+    print(model.test_model(test_np_array))
 
 def extract_data(file):
     ## where the data is held

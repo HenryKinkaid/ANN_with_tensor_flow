@@ -15,8 +15,11 @@ class ANN():
             ]
         )
 
+        self.model.compile(loss=tf.keras.losses.MeanSquaredError(),
+                         optimizer=tf.optimizers.Adam())
+
     def test_model(self, inputs: list):
-        return self.model(inputs)
+        return self.model.predict(inputs)
 
     def train_model_n_epochs(self, n):
         pass
