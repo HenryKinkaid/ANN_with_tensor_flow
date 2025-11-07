@@ -1,5 +1,6 @@
 import tensorflow as tf
 import csv
+import numpy as np
 MAX_X = 1626
 MAX_Y = 988
 
@@ -36,8 +37,22 @@ def main():
             run_sets.append([data_set[data][1:], data_set[data+1][1:], data_set[data+2][1:], data_set[data+3][1:]])
             # print('row num: ' + str(len(run_sets)) + ' row: ' + str(run_sets[-1]))
 
+def simple_train_test_split(X, y, test_size=0.2, random_seed=42):
+    """Splits X and y into training and testing sets"""
+    np.random.seed(random_seed)
+    indices = np.arange(len(X))
+    np.random.shuffle(indices)
 
+    split_point = int(len(X) * (1 - test_size))
+    train_idx = indices[:split_point]
+    test_idx = indices[split_point:]
 
+    X_train = X[train_idx]
+    y_train = y[train_idx]
+    X_test = X[test_idx]
+    y_test = y[test_idx]
+
+    return X_train, X_test, y_train, y_test
 
 
 if __name__ == "__main__":
