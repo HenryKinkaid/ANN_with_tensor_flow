@@ -13,6 +13,7 @@ def main():
     model = ANN()
 
     model.train_model_n_epochs(1,1,train[:,:3],train[:,3:])
+    print(model.test_model(test[:,:3]))
 
 def extract_data(file):
     """Import Data from CSV file and identify runs"""
@@ -47,7 +48,6 @@ def extract_data(file):
         if valid_run:
             run = data_set[i:i + 4]
             run_sets.append(run)
-            print(f"row num: {len(run_sets)} row: {run}")
 
     return run_sets
 

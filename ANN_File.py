@@ -19,9 +19,6 @@ class ANN():
                         optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
                            metrics=["mae"])
 
-    def test_model(self, inputs: list):
-        return self.model.predict(inputs)
-
     def train_model_n_epochs(self, n, batch_size, inputs, outputs):
         history = self.model.fit(x=inputs,
                      y=outputs,
