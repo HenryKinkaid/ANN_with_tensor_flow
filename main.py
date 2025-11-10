@@ -58,7 +58,7 @@ def extract_data(file):
 
 def simple_train_test_split(data, test_size=0.2, random_seed=42):
     """Splits X and y into training and testing sets"""
-    random.random.seed(random_seed)
+    random.seed(random_seed)
     random.shuffle(data)
     split = int(len(data) * 1-test_size)
     train_sets = data[:split]
