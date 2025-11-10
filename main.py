@@ -11,7 +11,8 @@ def main():
     train, test = simple_train_test_split(data)
     # print(data)
     model = ANN()
-    model.train_model_n_epochs(1,train)
+
+    model.train_model_n_epochs(1,1,train[:,:3],train[:,3:])
 
 def extract_data(file):
     """Import Data from CSV file and identify runs"""
@@ -58,7 +59,7 @@ def simple_train_test_split(data, test_size=0.2, random_seed=42):
     train_sets = data[:split]
     test_sets = data[split:]
 
-    return train_sets, test_sets
+    return np.array(train_sets), np.array(test_sets)
 
 if __name__ == "__main__":
     main()
