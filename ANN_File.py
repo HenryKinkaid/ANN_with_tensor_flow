@@ -3,10 +3,8 @@ import keras
 from keras import layers
 
 class ANN():
-    def __init__(self,train, test):
+    def __init__(self):
         # define the model with keras
-        train_data = train
-        test_data = test
 
         self.model = keras.Sequential(
             [
@@ -17,8 +15,11 @@ class ANN():
             ]
         )
 
-    def test_model(self, inputs: list):
-        return self.model(inputs)
+        self.model.compile(loss=tf.keras.losses.MeanSquaredError(),
+                         optimizer=tf.optimizers.Adam())
 
-    def train_model_n_epochs(self, n):
+    def test_model(self, inputs: list):
+        return self.model.predict(inputs)
+
+    def train_model_n_epochs(self, n, data):
         pass

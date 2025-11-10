@@ -11,6 +11,11 @@ def main():
     train, test = simple_train_test_split(data)
     neural_network = ANN(train, test)
     # print(data)
+    model = ANN()
+    # test_np_array = np.array([(.5,.5),(.5,.5),(.5,.5)])
+    test_np_array = np.array([.5, .5, .5, .5, .5, .5])
+    print(test_np_array.shape)
+    print(model.test_model(test_np_array))
 
 def extract_data(file):
     """Import Data from CSV file and identify runs"""
