@@ -59,6 +59,5 @@ def simple_train_test_split(data, test_size=0.2, random_seed=42):
 
     return train_sets, test_sets
 
-
 if __name__ == "__main__":
     main()
