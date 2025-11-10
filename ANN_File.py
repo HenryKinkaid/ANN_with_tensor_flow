@@ -21,5 +21,10 @@ class ANN():
     def test_model(self, inputs: list):
         return self.model.predict(inputs)
 
-    def train_model_n_epochs(self, n, data):
-        pass
+    def train_model_n_epochs(self, n, batch_size, inputs, outputs):
+        self.model.fit(x=inputs,
+                     y=outputs,
+                     batch_size=batch_size,
+                     epochs=n,
+                     validation_split=0.2,
+                     verbose=1)
