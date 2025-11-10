@@ -8,15 +8,15 @@ class ANN():
 
         self.model = keras.Sequential(
             [
-                layers.Dense(6, activation="relu", name="layer1"),
-                layers.Dense(6, activation="relu", name="layer2"),
-                layers.Dense(6, activation="relu", name="layer3"),
+                layers.Dense(128, activation="relu", name="layer1"),
+                layers.Dense(64, activation="relu", name="layer2"),
+                layers.Dense(32, activation="relu", name="layer3"),
                 layers.Dense(2, name="layer4"),
             ]
         )
 
         self.model.compile(loss=tf.keras.losses.MeanSquaredError(),
-                        optimizer=tf.optimizers.Adam(),
+                        optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
                            metrics=["mae"])
 
     def test_model(self, inputs: list):
@@ -31,3 +31,6 @@ class ANN():
                      verbose=1,
                     shuffle=True)
         return history
+
+    def test_model(self, inputs):
+        return self.model.predict(inputs)
