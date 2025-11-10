@@ -16,7 +16,8 @@ class ANN():
         )
 
         self.model.compile(loss=tf.keras.losses.MeanSquaredError(),
-                         optimizer=tf.optimizers.Adam())
+                        optimizer=tf.optimizers.Adam(),
+                           metrics=["mae"])
 
     def test_model(self, inputs: list):
         return self.model.predict(inputs)
