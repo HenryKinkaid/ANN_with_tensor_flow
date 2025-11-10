@@ -11,10 +11,7 @@ def main():
     train, test = simple_train_test_split(data)
     # print(data)
     model = ANN()
-    # test_np_array = np.array([(.5,.5),(.5,.5),(.5,.5)])
-    test_np_array = np.array([.5, .5, .5, .5, .5, .5])
-    print(test_np_array.shape)
-    print(model.test_model(test_np_array))
+    model.train_model_n_epochs(1,train)
 
 def extract_data(file):
     """Import Data from CSV file and identify runs"""
