@@ -13,47 +13,45 @@ def main():
     # print(data)
 
 def extract_data(file):
-    ## where the data is held
+    """Import Data from CSV file and identify runs"""
     data_set = []
 
     with open(file, newline='') as csvfile:
-        csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        csvreader = csv.reader(csvfile)
         for row in csvreader:
-            # creates the data and puts it in the data_set
-            temp_row_list = list(map(int, row))[1:]
-            temp_row_list[0] /= MAX_X
-            temp_row_list[1] /= MAX_Y
-            data_set.append(temp_row_list)
-        # max = 0
-        # for row in data_set:
-        #     if row[2] > max:
-        #         max = row[2]
-        #
-        # print(max)
+            try:
+                #convert data from pixel number to a number from 0.0-> 1.0 as prep for ANN
+                values = list(map(int, row))
+                x = values[1] / MAX_X
+                y = values[2] / MAX_Y
+                data_set.append([x, y] + values[3:])
+            except (ValueError, IndexError):
+                #skip bad rows that aren't properly formated (shouldn't be in there but just in case)
+                continue
 
     delta_x = 100/MAX_X # max distance for two positions that are in the same group
+    delta_sq = delta_x ** 2 #writing this now since will ref later
     run_sets = []
 
-    for data in range(len(data_set)):
-        next_run = True
-        if data + 3 >= len(data_set):
-            break
-        for next in range(1, 4):
-            diff_x_pos = data_set[data + next - 1][0] - data_set[data + next][0]
-            diff_y_pos = data_set[data + next - 1][1] - data_set[data + next][1]
-            if delta_x ** 2 < (diff_x_pos ** 2 + diff_y_pos ** 2):
-                next_run = False
+    for i in range(len(data_set) - 3):
+        valid_run = True
+        for j in range(1, 4):
+            dx = data_set[i + j - 1][0] - data_set[i + j][0]
+            dy = data_set[i + j - 1][1] - data_set[i + j][1]
+            if dx * dx + dy * dy > delta_sq:
+                valid_run = False
+                break
 
-        if next_run:
-            run_sets.append(
-                [data_set[data], data_set[data + 1], data_set[data + 2], data_set[data + 3]])
-            print('row num: ' + str(len(run_sets)) + ' row: ' + str(run_sets[-1]))
+        if valid_run:
+            run = data_set[i:i + 4]
+            run_sets.append(run)
+            print(f"row num: {len(run_sets)} row: {run}")
 
     return run_sets
 
 def simple_train_test_split(data, test_size=0.2, random_seed=42):
     """Splits X and y into training and testing sets"""
-    random.random.seed(random_seed)
+    random.seed(random_seed)
     random.shuffle(data)
     split = int(len(data) * 1-test_size)
     train_sets = data[:split]
