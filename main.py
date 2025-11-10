@@ -4,6 +4,7 @@ import numpy as np
 from ANN_File import ANN
 MAX_X = 1626
 MAX_Y = 988
+import random
 
 def main():
     data = extract_data('ball_positions.csv')
