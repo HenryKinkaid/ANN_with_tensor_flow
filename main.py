@@ -2,6 +2,7 @@ import tensorflow as tf
 import csv
 import numpy as np
 from ANN_File import ANN
+import time
 MAX_X = 1626
 MAX_Y = 988
 import random
@@ -26,6 +27,16 @@ def main():
     print("First 5 predictions vs actual:")
     print(np.hstack([predictions[:5], y_test[:5]]))
 
+    diff = predictions - y_test
+    err = np.sqrt(np.sum(np.square(diff), -1)/2) # RMSE
+    max_error = np.argmax(err)
+    print("inputs vs outputs for the max error: ")
+    print(f"inputs: {X_test[max_error]}")
+    print(f"expected output: {y_test[max_error]}")
+    print(f"actual output: {predictions[max_error]}")
+    print(f"error: {err[max_error]}")
+
+
 def extract_data(file):
     """Import Data from CSV file and identify runs"""
     data_set = []
@@ -40,11 +51,11 @@ def extract_data(file):
                 y = values[2] / MAX_Y
                 data_set.append([x, y] + values[3:])
             except (ValueError, IndexError):
-                #skip bad rows that aren't properly formated (shouldn't be in there but just in case)
+                #skip bad rows that aren't properly formatted (shouldn't be in there but just in case)
                 continue
 
     delta_x = 100/MAX_X # max distance for two positions that are in the same group
-    delta_sq = delta_x ** 2 #writing this now since will ref later
+    delta_sq = delta_x ** 2 # writing this now since will ref later
     run_sets = []
 
     for i in range(len(data_set) - 3):
@@ -59,8 +70,7 @@ def extract_data(file):
         if valid_run:
             run = data_set[i:i + 4]
             run_sets.append(run)
-            print(f"row num: {len(run_sets)} row: {run}")
-
+            # print(f"row num: {len(run_sets)} row: {run}")
     return run_sets
 
 def simple_train_test_split(data, test_size=0.2, random_seed=42):
