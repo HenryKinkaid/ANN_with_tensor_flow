@@ -31,3 +31,11 @@ class ANN():
                      verbose=1,
                     shuffle=True)
         return history
+
+    def create_full_run(self, inputs, length):
+        run = inputs
+        for i in range(length):
+            next_point = self.model.predict(inputs)
+            run.append(next_point)
+            inputs = run[-4:]
+        return run
