@@ -47,7 +47,7 @@ def extract_data(file):
         if valid_run:
             run = data_set[i:i + 4]
             run_sets.append(run)
-            print(f"row num: {len(run_sets)} row: {run}")
+            #print(f"row num: {len(run_sets)} row: {run}")
 
     return run_sets
 

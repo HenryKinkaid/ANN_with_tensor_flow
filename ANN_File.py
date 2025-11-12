@@ -31,6 +31,3 @@ class ANN():
                      verbose=1,
                     shuffle=True)
         return history
-
-    def test_model(self, inputs):
-        return self.model.predict(inputs)
