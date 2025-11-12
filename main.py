@@ -9,10 +9,22 @@ import random
 def main():
     data = extract_data('ball_positions.csv')
     train, test = simple_train_test_split(data)
+
+    X_train, y_train = prepare_X_y(train)
+    X_test, y_test   = prepare_X_y(test)
     # print(data)
     model = ANN()
 
-    model.train_model_n_epochs(1,1,train[:,:3],train[:,3:])
+    history = model.train_model_n_epochs(
+        n=50,  # number of epochs
+        batch_size=32,
+        inputs=X_train,
+        outputs=y_train
+    )
+
+    predictions = model.test_model(X_test)
+    print("First 5 predictions vs actual:")
+    print(np.hstack([predictions[:5], y_test[:5]]))
 
 def extract_data(file):
     """Import Data from CSV file and identify runs"""
@@ -60,6 +72,19 @@ def simple_train_test_split(data, test_size=0.2, random_seed=42):
     test_sets = data[split:]
 
     return np.array(train_sets), np.array(test_sets)
+
+def prepare_X_y(run_sets):
+    inputs = []
+    labels = []
+
+    for run in run_sets:
+        # flatten first 3 points for input
+        inp = [coord for point in run[:3] for coord in point[:2]]  # x and y only
+        out = run[3][:2]  # x and y of 4th point
+        inputs.append(inp)
+        labels.append(out)
+
+    return np.array(inputs, dtype=np.float32), np.array(labels, dtype=np.float32)
 
 if __name__ == "__main__":
     main()
