@@ -5,6 +5,7 @@ from ANN_File import ANN
 MAX_X = 1626
 MAX_Y = 988
 import random
+import matplotlib.pyplot as plt
 
 def main():
     data = extract_data('ball_positions.csv')
@@ -23,8 +24,18 @@ def main():
     )
 
     predictions = model.test_model(X_test)
-    print("First 5 predictions vs actual:")
-    print(np.hstack([predictions[:5], y_test[:5]]))
+    print("First 10 predictions vs actual:")
+    print(np.hstack([predictions[:10], y_test[:10]]))
+
+    plt.figure(figsize=(8, 6))
+    plt.scatter(y_test[:, 0], y_test[:, 1], color='blue', label='Actual Path', s=20)
+    plt.scatter(predictions[:, 0], predictions[:, 1], color='red', label='Predicted Path', s=20, marker='x')
+    plt.title("Predicted vs Actual Ball Path")
+    plt.xlabel("X Position (normalized)")
+    plt.ylabel("Y Position (normalized)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 def extract_data(file):
     """Import Data from CSV file and identify runs"""
@@ -59,7 +70,7 @@ def extract_data(file):
         if valid_run:
             run = data_set[i:i + 4]
             run_sets.append(run)
-            print(f"row num: {len(run_sets)} row: {run}")
+            #print(f"row num: {len(run_sets)} row: {run}")
 
     return run_sets
 
