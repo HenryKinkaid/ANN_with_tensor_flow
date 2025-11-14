@@ -41,22 +41,17 @@ def main():
     plt.grid(True)
     plt.show()
 
-    diff = predictions - y_test
-    err = np.sqrt(np.sum(np.square(diff), -1)/2) # RMSE
-    max_error = np.argmax(err)
-    print("inputs vs outputs for the max error: ")
-    print(f"inputs: {X_test[max_error]}")
-    print(f"expected output: {y_test[max_error]}")
-    print(f"actual output: {predictions[max_error]}")
-    print(f"error: {err[max_error]}")
+    # diff = predictions - y_test
+    # err = np.sqrt(np.sum(np.square(diff), -1)/2) # RMSE
+    # max_error = np.argmax(err)
+    # print("inputs vs outputs for the max error: ")
+    # print(f"inputs: {X_test[max_error]}")
+    # print(f"expected output: {y_test[max_error]}")
+    # print(f"actual output: {predictions[max_error]}")
+    # print(f"error: {err[max_error]}")
 
     if not USE_SAVED_MODEL and input("Save this model? (y/n) ").lower() == "y":
         model.model.save(input("file name? ") + ".keras")
-
-
-
-
-
 
 
 def extract_data(file):
