@@ -9,7 +9,9 @@ import matplotlib.pyplot as plt
 USE_SAVED_MODEL = True
 
 def main():
-    data = extract_data('ball_positions.csv')
+    data_set = get_data('ball_positions.csv')
+    data = extract_data(data_set)
+    runs = make_runs(data_set)
     train, test = simple_train_test_split(data)
 
     X_train, y_train = prepare_X_y(train)
@@ -53,16 +55,13 @@ def main():
     if not USE_SAVED_MODEL and input("Save this model? (y/n) ").lower() == "y":
         model.model.save(input("file name? ") + ".keras")
 
-
-def extract_data(file):
-    """Import Data from CSV file and identify runs"""
+def get_data(file):
     data_set = []
-
     with open(file, newline='') as csvfile:
         csvreader = csv.reader(csvfile)
         for row in csvreader:
             try:
-                #convert data from pixel number to a number from 0.0-> 1.0 as prep for ANN
+                # convert data from pixel number to a number from 0.0-> 1.0 as prep for ANN
                 values = list(map(int, row))
                 x = values[1] / MAX_X
                 y = values[2] / MAX_Y
@@ -70,6 +69,10 @@ def extract_data(file):
             except (ValueError, IndexError):
                 #skip bad rows that aren't properly formatted (shouldn't be in there but just in case)
                 continue
+    return data_set
+
+def extract_data(file):
+    data_set = file
 
     delta_x = 100/MAX_X # max distance for two positions that are in the same group
     delta_sq = delta_x ** 2 # writing this now since will ref later
@@ -90,6 +93,28 @@ def extract_data(file):
             # print(f"row num: {len(run_sets)} row: {run}")
 
     return run_sets
+
+def make_runs(file):
+    data_set = file
+
+    delta_x = 100/MAX_X
+    delta_sq = delta_x**2
+    next_run = False
+    full_runs = []
+    cur_run = []
+
+    for i in range(len(data_set)-1):
+        if next_run:
+            full_runs.append(cur_run)
+            cur_run = []
+            next_run = False
+        cur_run.append(data_set[i])
+        dx = data_set[i+1][0] - data_set[i][0]
+        dy = data_set[i+1][1] - data_set[i][1]
+        if dx * dx + dy * dy > delta_sq:
+            next_run = True
+
+    return full_runs
 
 def simple_train_test_split(data, test_size=0.2, random_seed=42):
     """Splits X and y into training and testing sets"""
