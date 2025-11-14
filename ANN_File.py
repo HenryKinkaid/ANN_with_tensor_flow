@@ -3,21 +3,24 @@ import keras
 from keras import layers
 
 class ANN():
-    def __init__(self):
+    def __init__(self, filepath=None):
         # define the model with keras
+        if filepath is None:
+            self.model = keras.Sequential(
+                [
+                    layers.Dense(128, activation="relu", name="layer1"),
+                    layers.Dense(64, activation="relu", name="layer2"),
+                    layers.Dense(32, activation="relu", name="layer3"),
+                    layers.Dense(2, name="layer4"),
+                ]
+            )
 
-        self.model = keras.Sequential(
-            [
-                layers.Dense(128, activation="relu", name="layer1"),
-                layers.Dense(64, activation="relu", name="layer2"),
-                layers.Dense(32, activation="relu", name="layer3"),
-                layers.Dense(2, name="layer4"),
-            ]
-        )
+            self.model.compile(loss=tf.keras.losses.MeanSquaredError(),
+                            optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+                               metrics=["mae"])
 
-        self.model.compile(loss=tf.keras.losses.MeanSquaredError(),
-                        optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
-                           metrics=["mae"])
+        else:
+            self.model = tf.keras.models.load_model(filepath)
 
     def test_model(self, inputs):
         return self.model.predict(inputs)

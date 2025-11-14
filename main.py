@@ -6,6 +6,7 @@ MAX_X = 1626
 MAX_Y = 988
 import random
 import matplotlib.pyplot as plt
+USE_SAVED_MODEL = True
 
 def main():
     data = extract_data('ball_positions.csv')
@@ -14,14 +15,17 @@ def main():
     X_train, y_train = prepare_X_y(train)
     X_test, y_test   = prepare_X_y(test)
     # print(data)
-    model = ANN()
+    if not USE_SAVED_MODEL:
+        model = ANN()
 
-    history = model.train_model_n_epochs(
-        n=50,  # number of epochs
-        batch_size=32,
-        inputs=X_train,
-        outputs=y_train
-    )
+        history = model.train_model_n_epochs(
+            n=50,  # number of epochs
+            batch_size=32,
+            inputs=X_train,
+            outputs=y_train
+        )
+    else:
+        model = ANN(filepath="my_model.keras")
 
     predictions = model.test_model(X_test)
     print("First 10 predictions vs actual:")
@@ -45,6 +49,14 @@ def main():
     print(f"expected output: {y_test[max_error]}")
     print(f"actual output: {predictions[max_error]}")
     print(f"error: {err[max_error]}")
+
+    if not USE_SAVED_MODEL and input("Save this model? (y/n) ").lower() == "y":
+        model.model.save(input("file name? ") + ".keras")
+
+
+
+
+
 
 
 def extract_data(file):
@@ -80,7 +92,7 @@ def extract_data(file):
         if valid_run:
             run = data_set[i:i + 4]
             run_sets.append(run)
-            print(f"row num: {len(run_sets)} row: {run}")
+            # print(f"row num: {len(run_sets)} row: {run}")
 
     return run_sets
 
