@@ -5,6 +5,8 @@ from ANN_File import ANN
 MAX_X = 1626
 MAX_Y = 988
 import random
+import matplotlib.pyplot as plt
+USE_SAVED_MODEL = True
 
 def main():
     data_set = get_data('ball_positions.csv')
@@ -16,18 +18,49 @@ def main():
     X_train, y_train = prepare_X_y(train)
     X_test, y_test   = prepare_X_y(test)
     # print(data)
-    model = ANN()
+    if not USE_SAVED_MODEL:
+        model = ANN()
 
-    history = model.train_model_n_epochs(
-        n=50,  # number of epochs
-        batch_size=32,
-        inputs=X_train,
-        outputs=y_train
-    )
+        history = model.train_model_n_epochs(
+            n=50,  # number of epochs
+            batch_size=32,
+            inputs=X_train,
+            outputs=y_train
+        )
+    else:
+        model = ANN(filepath="my_model.keras")
 
     predictions = model.test_model(X_test)
-    print("First 5 predictions vs actual:")
-    print(np.hstack([predictions[:5], y_test[:5]]))
+    print("First 10 predictions vs actual:")
+    print(np.hstack([predictions[:10], y_test[:10]]))
+
+    plt.figure(figsize=(8, 6))
+    plt.scatter(y_test[:, 0], y_test[:, 1], color='blue', label='Actual Path', s=20)
+    plt.scatter(predictions[:, 0], predictions[:, 1], color='red', label='Predicted Path', s=20, marker='x')
+    plt.title("Predicted vs Actual Ball Path")
+    plt.xlabel("X Position (normalized)")
+    plt.ylabel("Y Position (normalized)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+    diff = predictions - y_test
+    err = np.sqrt(np.sum(np.square(diff), -1)/2) # RMSE
+    max_error = np.argmax(err)
+    print("inputs vs outputs for the max error: ")
+    print(f"inputs: {X_test[max_error]}")
+    print(f"expected output: {y_test[max_error]}")
+    print(f"actual output: {predictions[max_error]}")
+    print(f"error: {err[max_error]}")
+
+    if not USE_SAVED_MODEL and input("Save this model? (y/n) ").lower() == "y":
+        model.model.save(input("file name? ") + ".keras")
+
+
+
+
+
+
 
 
 def get_data(file):
@@ -43,6 +76,7 @@ def get_data(file):
                 data_set.append([x, y] + values[3:])
             except (ValueError, IndexError):
                 # skip bad rows that aren't properly formated (shouldn't be in there but just in case)
+                #skip bad rows that aren't properly formatted (shouldn't be in there but just in case)
                 continue
     return data_set
 
@@ -50,7 +84,7 @@ def extract_data(file):
     data_set = file
 
     delta_x = 100/MAX_X # max distance for two positions that are in the same group
-    delta_sq = delta_x ** 2 #writing this now since will ref later
+    delta_sq = delta_x ** 2 # writing this now since will ref later
     run_sets = []
 
     for i in range(len(data_set) - 3):
@@ -65,7 +99,7 @@ def extract_data(file):
         if valid_run:
             run = data_set[i:i + 4]
             run_sets.append(run)
-            print(f"row num: {len(run_sets)} row: {run}")
+            # print(f"row num: {len(run_sets)} row: {run}")
 
     return run_sets
 
