@@ -56,13 +56,6 @@ def main():
     if not USE_SAVED_MODEL and input("Save this model? (y/n) ").lower() == "y":
         model.model.save(input("file name? ") + ".keras")
 
-
-
-
-
-
-
-
 def get_data(file):
     data_set = []
     with open(file, newline='') as csvfile:
@@ -75,7 +68,6 @@ def get_data(file):
                 y = values[2] / MAX_Y
                 data_set.append([x, y] + values[3:])
             except (ValueError, IndexError):
-                # skip bad rows that aren't properly formated (shouldn't be in there but just in case)
                 #skip bad rows that aren't properly formatted (shouldn't be in there but just in case)
                 continue
     return data_set
