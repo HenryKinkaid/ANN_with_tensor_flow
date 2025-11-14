@@ -1,6 +1,8 @@
 import tensorflow as tf
 import keras
 from keras import layers
+import numpy as np
+THRESHOLD = .0005
 
 class ANN():
     def __init__(self, filepath=None):
@@ -35,10 +37,20 @@ class ANN():
                     shuffle=True)
         return history
 
-    def create_full_run(self, inputs, length):
+    def create_full_run(self, inputs, length=100):
+        print(inputs.shape)
         run = inputs
         for i in range(length):
+
             next_point = self.model.predict(inputs)
-            run.append(next_point)
-            inputs = run[-4:]
+            # print(next_point[0][0] - run[0][-2])
+            if abs(next_point[0][0] - run[0][-2]) < THRESHOLD and abs(next_point[0][1] - run[0][-1]) < THRESHOLD:
+                print(i)
+                return run
+            run = np.append(run[0], next_point[0][0])
+            run = np.append(run, next_point[0][1])
+            run = np.expand_dims(run, axis=0)
+
+            inputs = run[:, -6:]
+            # print(inputs.shape)
         return run

@@ -52,6 +52,12 @@ def main():
     # print(f"actual output: {predictions[max_error]}")
     # print(f"error: {err[max_error]}")
 
+    # print(model.test_model(np.expand_dims(np.array([.5, .5, .5, .5, .5, .5]), axis=0)))
+
+    run = np.array(random.choice(runs))
+    print(model.create_full_run(np.expand_dims(run[:6], axis=0)))
+
+
     if not USE_SAVED_MODEL and input("Save this model? (y/n) ").lower() == "y":
         model.model.save(input("file name? ") + ".keras")
 
@@ -108,7 +114,8 @@ def make_runs(file):
             full_runs.append(cur_run)
             cur_run = []
             next_run = False
-        cur_run.append(data_set[i])
+        cur_run.append(data_set[i][0])
+        cur_run.append(data_set[i][1])
         dx = data_set[i+1][0] - data_set[i][0]
         dy = data_set[i+1][1] - data_set[i][1]
         if dx * dx + dy * dy > delta_sq:
@@ -118,7 +125,7 @@ def make_runs(file):
 
 def simple_train_test_split(data, test_size=0.2, random_seed=42):
     """Splits X and y into training and testing sets"""
-    random.seed(random_seed)
+    # random.seed(random_seed)
     random.shuffle(data)
     split = int(len(data) * (1 - test_size))
     train_sets = data[:split]
