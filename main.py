@@ -2,10 +2,12 @@ import tensorflow as tf
 import csv
 import numpy as np
 from ANN_File import ANN
-MAX_X = 1626
-MAX_Y = 988
+import cv2
 import random
 import matplotlib.pyplot as plt
+MAX_X = 1626
+MAX_Y = 988
+
 USE_SAVED_MODEL = True
 
 def main():
@@ -55,8 +57,22 @@ def main():
     # print(model.test_model(np.expand_dims(np.array([.5, .5, .5, .5, .5, .5]), axis=0)))
 
     run = np.array(random.choice(runs))
-    print(model.create_full_run(np.expand_dims(run[:6], axis=0)))
+    predicted_run = model.create_full_run(np.expand_dims(run[:6], axis=0))[0].tolist()
+    cv2.namedWindow("predicted vs actual path")
+    shape = (800, 800, 3)
+    img = np.zeros(shape)
+    radius = 5
+    thickness = -1
+    print(predicted_run)
+    for i in range(0, len(predicted_run), 2):
+        print((predicted_run[i], predicted_run[i+1]))
+        cv2.circle(img, (int(predicted_run[i]*shape[0]), int(predicted_run[i+1]*shape[1])), radius, (0, 0, 255), thickness)
 
+    for i in range(0, len(predicted_run), 2):
+        print((run[i], run[i+1]))
+        cv2.circle(img, (int(run[i]*shape[0]), int(run[i+1]*shape[1])), radius,(255, 0, 0), thickness)
+    cv2.imshow("predicted vs actual path", img)
+    cv2.waitKey(0)
 
     if not USE_SAVED_MODEL and input("Save this model? (y/n) ").lower() == "y":
         model.model.save(input("file name? ") + ".keras")
