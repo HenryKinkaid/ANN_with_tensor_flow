@@ -72,6 +72,10 @@ def main():
     for i in range(0, len(predicted_run), 2):
         # print((run[i], run[i+1]))
         cv2.circle(img, (int(run[i]*shape[0]), int(run[i+1]*shape[1])), radius,(255, 0, 0), thickness)
+    img = cv2.putText(img, 'prediction', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                        1, (0, 0, 255), 2, cv2.LINE_AA)
+    img = cv2.putText(img, 'real', (50, 100), cv2.FONT_HERSHEY_SIMPLEX,
+                      1, (255, 0, 0), 2, cv2.LINE_AA)
     cv2.imshow("predicted vs actual path", img)
     cv2.waitKey(0)
 
