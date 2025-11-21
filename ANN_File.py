@@ -38,8 +38,8 @@ class ANN():
         return history
 
     def create_full_run(self, inputs, length=100):
-        print(inputs.shape)
-        run = inputs
+        print(f"inputs.shape: {inputs.shape}")
+        run = inputs # note that run is a 2d array with a shape (1, n) because this is the array shape expected by tensorflow
         for i in range(length):
 
             next_point = self.model.predict(inputs)
@@ -47,9 +47,9 @@ class ANN():
             if abs(next_point[0][0] - run[0][-2]) < THRESHOLD and abs(next_point[0][1] - run[0][-1]) < THRESHOLD:
                 print(i)
                 return run
-            run = np.append(run[0], next_point[0][0])
-            run = np.append(run, next_point[0][1])
-            run = np.expand_dims(run, axis=0)
+            run = np.append(run[0], next_point[0][0]) # run is a 2d array, so run[0] returns the actual list of points
+            run = np.append(run, next_point[0][1]) # at this point, run is no longer a 2d array, so run itself is just the list of points
+            run = np.expand_dims(run, axis=0) # turns run back into a 2d array
 
             inputs = run[:, -6:]
             # print(inputs.shape)
